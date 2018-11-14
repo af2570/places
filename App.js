@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { ApolloProvider } from 'react-apollo'
 import { View, Text } from 'react-native'
 
+import Navigator from './src/routes'
+
 import client from './lib/apollo'
 
 class App extends Component {
@@ -9,20 +11,16 @@ class App extends Component {
     super(props)
   }
 
-  render() {
+  render = () => {
     // TODO add routes
     return (
-      <View>
-        <Text>App</Text>
-      </View>
+      <ApolloProvider client={client}>
+        <View style={{ flex: 1 }}>
+          <Navigator />
+        </View>
+      </ApolloProvider>
     )
   }
 }
 
-const AppWithApollo = () => (
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>
-)
-
-export default AppWithApollo
+export default App
