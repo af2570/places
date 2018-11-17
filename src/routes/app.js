@@ -1,9 +1,9 @@
-import { Login } from '../../screens'
+import { Home } from '../screens'
 
 export default {
-  Login: {
-    route: 'Login',
-    screen: Login,
+  Home: {
+    route: 'Home',
+    screen: Home,
     navigationOptions: {
       gesturesEnabled: false,
       header: null

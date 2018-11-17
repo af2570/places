@@ -1,11 +1,8 @@
 import {
   StyleSheet,
-  Platform,
-  Dimensions
+  Platform
 } from 'react-native'
 import { shared, colors } from '../../styles'
-
-const dynamicTop = Dimensions.get('window').height - 700
 
 export default StyleSheet.create({
   main: {
@@ -26,7 +23,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-end',
-    paddingBottom: 50
+    paddingBottom: 70
   },
   inputContainer: {
     borderBottomWidth: 1,
@@ -36,8 +33,7 @@ export default StyleSheet.create({
       ios: 15,
       android: 7
     }),
-    marginVertical: 20,
-    marginHorizontal: 8
+    margin: 15
   },
   input: {
     color: '#fff',
@@ -57,8 +53,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
-    marginBottom: 20,
-    marginHorizontal: 8
+    margin: 15
   },
   loginButtonText: {
     color: colors.main,
