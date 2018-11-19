@@ -21,26 +21,40 @@ class Home extends Component {
   constructor(props) {
     super(props)
 
+    console.log(props)
+
     this.state = {
-      searchText: ''
+      searchText: '',
+      region: null
     }
 
-    this.typingTimer;
-    this.typingTimeout = 500;
+  }
+
+  componentDidMount = () => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          region: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1
+          }
+        })
+      },
+      error => {
+        console.log('Error getting location: ', error)
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    )
   }
 
   onChangeSearchText = (text) => {
-    clearTimeout(this.typingTimer)
     this.setState({ searchText: text })
-    this.typingTimer = setTimeout(() => this.onFinishedTyping(), this.typingTimeout)
+    // this.typingTimer = setTimeout(() => this.onFinishedTyping(), this.typingTimeout)
   }
 
   onSubmitSearchText = () => {
-    clearTimeout(this.typingTimer)
-    this.onFinishedTyping()
-  }
-
-  onFinishedTyping = () => {
     let { searchText } = this.state
     // TODO: query for locations using search text
     console.log('SEARCH: ', searchText)
@@ -48,20 +62,34 @@ class Home extends Component {
 
   toggleMenu = () => {
     // TODO: implement menu (with logout option)
+    this.refs.search.blur()
+    this.props.navigation.openDrawer()
     console.log('Toggle menu')
+  }
+
+  onPressLocation = ({ coordinate, position, placeId, name }) => {
+    this.refs.search.blur()
+    console.log('Press location', { coordinate, position })
   }
 
   render = () => {
     // TODO: blur searchbar on click away (click map view)
-
     // TODO: get geolocation & set initial location for map
 
-    const { searchText } = this.state
+    const { searchText, region } = this.state
+
     return (
       <View style={styles.main}>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
+          showsIndoors={false}
+          showsTraffic={false}
+          showsBuildings={false}
+          showsUserLocation={true}
+          onPress={this.onPressLocation}
+          onPoiClick={this.onPressLocation}
+          region={region}
         >
 
         </MapView>
@@ -73,11 +101,12 @@ class Home extends Component {
             <Icon name='menu' color={colors.dark} />
           </TouchableOpacity>
           <TextInput
+            ref='search'
             placeholder='Search'
             value={searchText}
             onChangeText={this.onChangeSearchText}
             onSubmitEditing={this.onSubmitSearchText}
-            authoCorrect={false}
+            autoCorrect={false}
             autoCapitalize='none'
             style={styles.search}
             returnKeyType='search'

@@ -15,9 +15,9 @@ class App extends Component {
     // TODO add routes
     return (
       <ApolloProvider client={client}>
-        <View style={{ flex: 1 }}>
-          <Navigator />
-        </View>
+          <View style={{ flex: 1 }}>
+            <Navigator />
+          </View>
       </ApolloProvider>
     )
   }
