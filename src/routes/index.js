@@ -1,14 +1,14 @@
-import { StackNavigator, SwitchNavigator } from 'react-navigation'
+import { createStackNavigator, createSwitchNavigator } from 'react-navigation'
 
 import AuthRoutes from './auth'
 import AppRoutes from './app'
 
 import { Splash } from '../screens'
 
-const AuthStack = StackNavigator(AuthRoutes)
-const AppStack = StackNavigator(AppRoutes)
+const AuthStack = createStackNavigator(AuthRoutes)
+const AppStack = createStackNavigator(AppRoutes)
 
-const Router = SwitchNavigator({
+const Router = createSwitchNavigator({
   Splash,
   Auth: AuthStack,
   App: AppStack
