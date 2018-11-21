@@ -23,30 +23,21 @@ class Home extends Component {
 
     console.log(props)
 
-    this.state = {
-      searchText: '',
-      region: null
+    let region = null
+
+    if (props.screenProps.location) {
+      region = {
+        latitude: props.screenProps.location.latitude,
+        longitude: props.screenProps.location.longitude,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1
+      }
     }
 
-  }
-
-  componentDidMount = () => {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState({
-          region: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: 0.1,
-            longitudeDelta: 0.1
-          }
-        })
-      },
-      error => {
-        console.log('Error getting location: ', error)
-      },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    )
+    this.state = {
+      searchText: '',
+      region
+    }
   }
 
   onChangeSearchText = (text) => {
@@ -67,12 +58,24 @@ class Home extends Component {
     console.log('Toggle menu')
   }
 
-  onPressLocation = ({ coordinate, position, placeId, name }) => {
+  onPressLocation = (e) => {
+    const {
+      coordinate,
+      position,
+      placeId,
+      name
+    } = e.nativeEvent
     this.refs.search.blur()
-    console.log('Press location', { coordinate, position })
+    console.log('Press location', { coordinate, position, placeId, name })
+  }
+
+  onRegionChange = (region) => {
+    console.log('Change region', region)
+    this.setState({ region })
   }
 
   render = () => {
+    console.log(this.refs)
     // TODO: blur searchbar on click away (click map view)
     // TODO: get geolocation & set initial location for map
 
@@ -81,17 +84,21 @@ class Home extends Component {
     return (
       <View style={styles.main}>
         <MapView
+          initialRegion={region}
+          ref='mapview'
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           showsIndoors={false}
           showsTraffic={false}
           showsBuildings={false}
+          pitchEnabled={false}
+          toolbarEnabled={false}
           showsUserLocation={true}
           onPress={this.onPressLocation}
           onPoiClick={this.onPressLocation}
-          region={region}
+          onRegionChange={() => this.refs.search.blur()}
+          onRegionChangeComplete={this.onRegionChange}
         >
-
         </MapView>
         <View style={styles.searchContainer}>
           <TouchableOpacity

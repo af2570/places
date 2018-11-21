@@ -3,33 +3,27 @@ import { View } from 'react-native'
 import {
   createStackNavigator,
   createSwitchNavigator,
-  createDrawerNavigator,
-  DrawerItems,
-  SafeAreaView
+  createDrawerNavigator
 } from 'react-navigation'
 
 import AuthRoutes from './auth'
 import AppRoutes from './app'
 
 import { Splash } from '../screens'
+import { DrawerContentComponent } from '../components'
+import { colors } from '../styles'
 
 const AuthStack = createStackNavigator(AuthRoutes)
-
-// TODO: try drawernavigator for app routes (built-in sidebar menu)
-// createDrawerNavigator: https://reactnavigation.org/docs/en/drawer-navigator.html
-// DrawerActions: https://reactnavigation.org/docs/en/drawer-actions.html
-const DrawerContentComponent = (props) => (
-  <View>
-    <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
-      <DrawerItems {...props} />
-    </SafeAreaView>
-  </View>
-)
 
 const AppStack = createDrawerNavigator(AppRoutes, {
   // drawerWidth: 100,
   contentComponent: DrawerContentComponent,
-  drawerType: 'back'
+  drawerType: 'back',
+  contentOptions: {
+    activeTintColor: colors.dark,
+    inactiveTintColor: colors.lightAccent,
+    // activeBackgroundColor: colors.main
+  }
 })
 
 const Router = createSwitchNavigator({
