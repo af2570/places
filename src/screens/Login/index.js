@@ -15,9 +15,12 @@ import { compose } from 'recompose'
 import { withNav } from '../../../lib/recompose'
 import LocalStorage from '../../../lib/LocalStorage'
 
+import client from '../../../lib/apollo'
 import { graphql } from 'react-apollo'
 import { ViewerQuery } from './queries'
 import { LoginMutation } from './mutations'
+
+import { ACCESS_TOKEN } from '../../../config/env.config.js'
 
 import styles from './styles'
 
@@ -65,7 +68,8 @@ class Login extends Component {
       }
 
       console.log('Success: ', data.login)
-      LocalStorage.setItem('places_access_token', token)
+      LocalStorage.setItem(ACCESS_TOKEN, token)
+      await client.resetStore()
       // Alert.alert('Success!', 'You were logged in.')
       this.props.navigate('Home')
     } catch (err) {

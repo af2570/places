@@ -3,12 +3,7 @@ import { StyleSheet } from 'react-native'
 export const shared = {
   main: {
     flex: 1,
-    ...StyleSheet.absoluteFillObject,
-    // position: 'absolute',
-    // left: 0,
-    // top: 0,
-    // width: '100%',
-    // height: '100%'
+    ...StyleSheet.absoluteFillObject
   }
 }
 

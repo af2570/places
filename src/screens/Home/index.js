@@ -5,21 +5,24 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  FlatList,
   Alert
 } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { Icon, ListItem } from 'react-native-elements'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
+import { AnimatedModal } from '../../components'
 import { Pin } from '../../images'
 
-import { compose, withStateHandlers } from 'recompose'
+import { compose, withStateHandlers, lifecycle } from 'recompose'
 import { withNav, withAuth } from '../../../lib/recompose'
-import LocalStorage from '../../../lib/LocalStorage'
 
 import { graphql } from 'react-apollo'
 import { SearchPlaces } from './queries'
 
 import { colors } from '../../styles'
 import styles from './styles'
+
+import { DEFAULT_LOCATION } from '../../../lib/constants'
 
 class Home extends Component {
   constructor(props) {
@@ -39,8 +42,13 @@ class Home extends Component {
   }
 
   clearSearch = () => {
+    this.modal.close()
     this.setState({ searchText: '' })
     this.props.setKeyword('')
+  }
+
+  onFocusSearchBar = () => {
+    this.modal.close()
   }
 
   onChangeSearchText = (text) => {
@@ -50,6 +58,10 @@ class Home extends Component {
   onSubmitSearchText = () => {
     let { searchText } = this.state
     this.props.setKeyword(searchText)
+
+    if (searchText) {
+      this.modal.open()
+    }
   }
 
   onPressLocation = (e) => {
@@ -61,6 +73,10 @@ class Home extends Component {
     } = e.nativeEvent
     this.refs.search.blur()
     console.log('Press location', { coordinate, position, placeId, name })
+  }
+
+  onPressSearchResult = (place) => {
+    console.log('Pressed place in list: ', place)
   }
 
   onRegionChange = (region) => {
@@ -83,24 +99,55 @@ class Home extends Component {
       return null
     }
 
-    return this.props.data.places.map(
-      (place, i) => (
-        <Marker
-          key={i}
-          image={Pin}
-          coordinate={{
-            latitude: place.location.lat,
-            longitude: place.location.lng
-          }}
-          flat={true}
-          onPress={() => this.onPressSearchMarker(place)}
-        />
-      )
-    )
-
+    // return this.props.data.places.map(
+    //   (place, i) => (
+    //     <Marker
+    //       key={i}
+    //       image={Pin}
+    //       coordinate={{
+    //         latitude: place.location.lat,
+    //         longitude: place.location.lng
+    //       }}
+    //       flat={true}
+    //       onPress={() => this.onPressSearchMarker(place)}
+    //     />
+    //   )
+    // )
+    //
     console.log('PLACES: ', this.props.data.places)
 
     return null
+  }
+
+  _renderPlaces = () => {
+
+    if (
+      !this.props.data ||
+      this.props.data.error ||
+      !this.props.data.places
+    ) {
+      return null
+    }
+
+    return (
+      <FlatList
+        data={this.props.data.places}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <ListItem
+            title={item.name}
+            subtitle={item.address}
+            onPress={_ => this.onPressSearchResult(item)}
+          />
+        )}
+        ListEmptyComponent={_ => (
+          <View style={styles.emptyList}>
+            <Text>No results</Text>
+          </View>
+        )}
+      />
+    )
+
   }
 
   _renderSearchButton = () => {
@@ -167,6 +214,13 @@ class Home extends Component {
             returnKeyType='search'
           />
         </View>
+        <AnimatedModal
+          withHeader
+          title={`"${searchText}"`}
+          ref={el => this.modal = el}
+        >
+          {this._renderPlaces()}
+        </AnimatedModal>
       </View>
     )
   }
@@ -178,7 +232,7 @@ const enhance = compose(
   withStateHandlers(
     ({ navigation, screenProps }) => {
 
-      let { latitude, longitude } = screenProps.location
+      let { latitude, longitude } = screenProps.location || DEFAULT_LOCATION
       let latitudeDelta = 0.1
       let longitudeDelta = 0.1
 
