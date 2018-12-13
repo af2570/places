@@ -35,5 +35,29 @@ export default StyleSheet.create({
   search: {
     flex: 1,
     color: colors.dark
+  },
+  divider: {
+    marginHorizontal: 10,
+    height: 1,
+    width: '100%',
+    backgroundColor: colors.lightAccent,
+    opacity: 0.7
+  },
+  row: {
+    padding: 10,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start'
+  },
+  rowTitle: {
+    marginBottom: 7,
+    fontSize: 17,
+    color: colors.dark,
+    fontWeight: 'bold'
+  },
+  rowSubtitle: {
+    marginBottom: 7,
+    fontSize: 14,
+    color: colors.lightAccent
   }
 })

@@ -4,7 +4,8 @@ import {
   Text,
   Animated,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { SafeAreaView } from 'react-navigation'
@@ -12,7 +13,7 @@ import { SafeAreaView } from 'react-navigation'
 import styles from './styles'
 import { colors } from '../../styles'
 
-class AnimatedModal extends Component {
+class AnimatedDialog extends Component {
   constructor(props) {
     super(props)
 
@@ -36,7 +37,7 @@ class AnimatedModal extends Component {
   }
 
   open = () => {
-    const height = this.props.height || 400
+    const height = Dimensions.get('window').height
     this.setState(
       { isModalOpen: true },
       _ => this.animateModal(height)
@@ -48,18 +49,23 @@ class AnimatedModal extends Component {
   }
 
   _renderHeader = () => {
-    if (!this.props.withHeader) {
+    const { withHeader, title, textColor } = this.props
+    if (!withHeader) {
       return null
     }
 
+    let color = textColor || colors.lightAccent
+
     return (
       <View style={styles.header}>
-        <View style={{ width: 28 + 14 }}/>
-        {this.props.title &&
-          <Text style={styles.headerText}>{this.props.title}</Text>
+        <View style={{ width: 28 + 14 }} />
+        {title &&
+          <Text style={[styles.headerText, { color }]}>
+            {title}
+          </Text>
         }
         <TouchableOpacity style={styles.headerIcon} onPress={_ => this.close()}>
-          <Icon name='close' color='#fff' />
+          <Icon name='close' color={color} />
         </TouchableOpacity>
       </View>
     )
@@ -67,6 +73,7 @@ class AnimatedModal extends Component {
 
   render = () => {
     let { isModalOpen, animatedHeight } = this.state
+
     return (
       <Modal
         transparent
@@ -75,19 +82,33 @@ class AnimatedModal extends Component {
         visible={isModalOpen}
       >
         <View style={styles.container}>
-          <TouchableOpacity style={styles.overlay} onPress={this.close} />
-          <Animated.View style={{ height: animatedHeight }}>
-            <SafeAreaView style={styles.modal} forceInset={{ bottom: 'always', horizontal: 'never' }}>
-              {this._renderHeader()}
-              <View style={styles.body}>
-                {this.props.children}
+          <SafeAreaView
+            style={styles.safeAreaView}
+            forceInset={{
+              top: 'always',
+              bottom: 'always',
+              horizontal: 'never'
+            }}
+          >
+            <TouchableOpacity style={styles.overlay} onPress={_ => this.close()} />
+            <Animated.View style={{ height: animatedHeight }}>
+              <View
+                style={[
+                  styles.dialog,
+                  { backgroundColor: this.props.color || '#fff' }
+                ]}
+              >
+                {this._renderHeader()}
+                <View style={styles.body}>
+                  {this.props.children}
+                </View>
               </View>
-            </SafeAreaView>
-          </Animated.View>
+            </Animated.View>
+          </SafeAreaView>
         </View>
       </Modal>
     )
   }
 }
 
-export default AnimatedModal
+export default AnimatedDialog

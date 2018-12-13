@@ -8,12 +8,12 @@ import {
   FlatList,
   Alert
 } from 'react-native'
-import { Icon, ListItem } from 'react-native-elements'
+import { Icon } from 'react-native-elements'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
-import { AnimatedModal } from '../../components'
+import { AnimatedModal, CategoryDialog } from '../../components'
 import { Pin } from '../../images'
 
-import { compose, withStateHandlers, lifecycle } from 'recompose'
+import { compose, withStateHandlers } from 'recompose'
 import { withNav, withAuth } from '../../../lib/recompose'
 
 import { graphql } from 'react-apollo'
@@ -30,7 +30,8 @@ class Home extends Component {
     let region = null
 
     this.state = {
-      searchText: ''
+      searchText: '',
+      highlighted: null
     }
   }
 
@@ -38,17 +39,16 @@ class Home extends Component {
     // TODO: implement menu (with logout option)
     this.refs.search.blur()
     this.props.navigation.openDrawer()
-    console.log('Toggle menu')
   }
 
   clearSearch = () => {
-    this.modal.close()
+    this.refs.modal.close()
     this.setState({ searchText: '' })
     this.props.setKeyword('')
   }
 
   onFocusSearchBar = () => {
-    this.modal.close()
+    this.refs.modal.close()
   }
 
   onChangeSearchText = (text) => {
@@ -60,11 +60,11 @@ class Home extends Component {
     this.props.setKeyword(searchText)
 
     if (searchText) {
-      this.modal.open()
+      this.refs.modal.open()
     }
   }
 
-  onPressLocation = (e) => {
+  onPressLocation = (place) => (e) => {
     const {
       coordinate,
       position,
@@ -86,6 +86,7 @@ class Home extends Component {
 
   onPressSearchMarker = (place) => {
     console.log('Pressed place: ', place)
+    this.setState({ highlighted: place.id })
     // TODO: some way to add location to list
   }
 
@@ -99,27 +100,49 @@ class Home extends Component {
       return null
     }
 
-    // return this.props.data.places.map(
-    //   (place, i) => (
-    //     <Marker
-    //       key={i}
-    //       image={Pin}
-    //       coordinate={{
-    //         latitude: place.location.lat,
-    //         longitude: place.location.lng
-    //       }}
-    //       flat={true}
-    //       onPress={() => this.onPressSearchMarker(place)}
-    //     />
-    //   )
-    // )
-    //
-    console.log('PLACES: ', this.props.data.places)
-
-    return null
+    return this.props.data.places.map(
+      (place, i) => (
+        <Marker
+          key={i}
+          image={Pin}
+          coordinate={{
+            latitude: place.location.lat,
+            longitude: place.location.lng
+          }}
+          flat={true}
+          onPress={_ => this.onPressSearchMarker(place)}
+        />
+      )
+    )
   }
 
-  _renderPlaces = () => {
+  _renderSearchResult = ({ item, index }) => {
+    const title = `${index + 1}. ${item.name}`
+    const address = item.address
+
+    // TODO: make this a swipeable component
+
+    return (
+      <TouchableOpacity style={styles.row} onPress={_ => this.onPressSearchResult(item)}>
+        <Text style={styles.rowTitle}>
+          {index + 1}. {item.name}
+        </Text>
+        <Text style={styles.rowSubtitle}>
+          {item.address}
+        </Text>
+        {item.added &&
+          <View style={styles.rowLine}>
+            <Icon name='person-pin' size={17} color={colors.lightAccent} />
+            <Text style={styles.rowSubtitle}>
+              You have saved this location
+            </Text>
+          </View>
+        }
+      </TouchableOpacity>
+    )
+  }
+
+  _renderSearchResultList = () => {
 
     if (
       !this.props.data ||
@@ -133,9 +156,9 @@ class Home extends Component {
       <FlatList
         data={this.props.data.places}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <ListItem
-            title={item.name}
+            title={`${index + 1}. ${item.name}`}
             subtitle={item.address}
             onPress={_ => this.onPressSearchResult(item)}
           />
@@ -172,6 +195,8 @@ class Home extends Component {
 
   render = () => {
 
+    console.log('CATEGORY: ', this.refs.categoryDialog)
+
     // TODO: Option to "Redo Search in Area"
 
     const { searchText } = this.state
@@ -192,7 +217,7 @@ class Home extends Component {
           showsUserLocation={true}
           onPress={this.onPressLocation}
           onPoiClick={this.onPressLocation}
-          onRegionChange={() => this.refs.search.blur()}
+          onRegionChange={_ => this.refs.search.blur()}
           onRegionChangeComplete={this.onRegionChange}
         >
           {this._renderSearchMarkers()}
@@ -216,11 +241,12 @@ class Home extends Component {
         </View>
         <AnimatedModal
           withHeader
-          title={`"${searchText}"`}
-          ref={el => this.modal = el}
+          title={`Showing results for "${searchText}"`}
+          ref='modal'
         >
-          {this._renderPlaces()}
+          {this._renderSearchResultList()}
         </AnimatedModal>
+        <CategoryDialog ref='categoryDialog' />
       </View>
     )
   }

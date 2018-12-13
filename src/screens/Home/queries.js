@@ -23,6 +23,7 @@ export const SearchPlaces = gql`
         lat
         lng
       }
+      added
     }
   }
 `
