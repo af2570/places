@@ -39,9 +39,17 @@ export default StyleSheet.create({
   divider: {
     marginHorizontal: 10,
     height: 1,
-    width: '100%',
     backgroundColor: colors.lightAccent,
     opacity: 0.7
+  },
+  flexRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start'
+  },
+  alignRight: {
+    flexDirection: 'column',
+    alignItems: 'flex-end'
   },
   row: {
     padding: 10,
@@ -57,6 +65,13 @@ export default StyleSheet.create({
   },
   rowSubtitle: {
     marginBottom: 7,
+    fontSize: 14,
+    color: colors.lightAccent
+  },
+  rowLine: {
+    flexDirection: 'row'
+  },
+  rowText: {
     fontSize: 14,
     color: colors.lightAccent
   }

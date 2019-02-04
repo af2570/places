@@ -3,13 +3,18 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
-  ScrollView
+  TextInput
 } from 'react-native'
 import { Icon } from 'react-native-elements'
 import AnimatedDialog from '../AnimatedDialog'
+import GridList from '../GridList'
 
-import { compose, withStateHandlers, withProps, toRenderProps } from 'recompose'
+import {
+  compose,
+  withStateHandlers,
+  withProps,
+  toRenderProps
+} from 'recompose'
 
 import { graphql } from 'react-apollo'
 import { GetIconsAndColors } from './queries'
@@ -68,7 +73,7 @@ class CategoryDialog extends Component {
   }
 
   canPressPrevious = () => {
-    if (this.props.step >= 2) {
+    if (this.props.step === 0) {
       return false
     }
 
@@ -106,11 +111,8 @@ class CategoryDialog extends Component {
       if (!this.canSubmit()) {
         return
       }
-
       let data = await this.props.submit()
-
-      console.log('submit category', data)
-
+      // console.log('submit category', data)
 
     } catch (err) {
       console.log('submit category error: ', err)
@@ -130,64 +132,58 @@ class CategoryDialog extends Component {
     }
   }
 
-  _renderColors = () => {
+  _renderColor = ({ item }) => {
+    const isSelected = (
+      this.props.color &&
+      this.props.color.id === item.id
+    )
     return (
-      <ScrollView style={styles.wrappedList}>
-        {(this.props.data.colors || []).map((color, i) => {
-          const isSelected = (
-            this.props.color &&
-            this.props.color.id === color.id
-          )
-          return (
-            <TouchableOpacity
-              key={i}
-              style={[styles.option, { backgroundColor: color.hex }]}
-              onPress={_ => this.props.setColor(color)}
-            >
-              {isSelected &&
-                <Icon name='check' size={32} color='#fff' />
-              }
-            </TouchableOpacity>
-          )
-        })}
-      </ScrollView>
+      <TouchableOpacity
+        style={[styles.option, { backgroundColor: item.hex }]}
+        onPress={_ => this.props.setColor(item)}
+      >
+        {isSelected &&
+          <Icon name='check' size={30} color='#fff' />
+        }
+      </TouchableOpacity>
     )
   }
 
-  _renderIcons = () => {
+  _renderIcon = ({ item }) => {
+    const isSelected = (
+      this.props.icon &&
+      this.props.icon.id === item.id
+    )
+    let style = [styles.option]
+    if (isSelected) {
+      style.push(styles.selectedOption)
+    }
+
     return (
-      <ScrollView style={styles.wrappedList}>
-        {(this.props.data.icons || []).map((icon, i) => {
-          const isSelected = (
-            this.props.icon &&
-            this.props.icon.id === icon.id
-          )
-
-          let style = [styles.option]
-          if (isSelected) {
-            style.push(styles.selectedOption)
-          }
-
-          return (
-            <TouchableOpacity
-              key={i}
-              style={style}
-              onPress={_ => this.props.setIcon(icon)}
-            >
-              <Icon {...icon} color='#fff' size={32} />
-            </TouchableOpacity>
-          )
-        })}
-      </ScrollView>
+      <TouchableOpacity style={style} onPress={_ => this.props.setIcon(item)}>
+        <Icon {...item} color='#fff' size={30} />
+      </TouchableOpacity>
     )
   }
 
   _renderContent = () => {
     switch (this.props.step) {
       case 0:
-        return this._renderColors()
+        return (
+          <GridList
+            data={this.props.data.colors}
+            renderItem={this._renderColor}
+            ItemEmptyComponent={_ => <View style={styles.option} />}
+          />
+        )
       case 1:
-        return this._renderIcons()
+        return (
+          <GridList
+            data={this.props.data.icons}
+            renderItem={this._renderIcon}
+            ItemEmptyComponent={_ => <View style={styles.option} />}
+          />
+        )
       case 2:
         return (
           <View style={styles.nameContainer}>
@@ -206,7 +202,7 @@ class CategoryDialog extends Component {
                 value={this.props.name}
                 onChangeText={text => this.props.setName(text)}
                 onSubmitEditing={_ => this.submit()}
-                returnKeyType='submit'
+                returnKeyType='done'
                 style={styles.input}
                 placeholderTextColor={this.state.textColor}
               />
@@ -233,12 +229,9 @@ class CategoryDialog extends Component {
     }
 
     return (
-      <View style={styles.progress}>
+      <View style={styles.footer}>
         {this.canPressPrevious() &&
-          <TouchableOpacity
-            style={styles.progressButton}
-            onPress={this.previousStep}
-          >
+          <TouchableOpacity onPress={this.previousStep}>
             <Text style={[styles.progressText, { color: textColor }]}>
               Previous
             </Text>
@@ -246,11 +239,11 @@ class CategoryDialog extends Component {
         }
         <View />
         <TouchableOpacity
-          style={[styles.progressButton, { opacity: canPressNext ? 1 : 0.6 }]}
+          style={{ opacity: canPressNext ? 1 : 0.6 }}
           disabled={!canPressNext}
           onPress={nextButtonAction}
         >
-          <Text style={[styles.progressText, { color: textColor }]}>
+          <Text style={{ color: textColor }}>
             {nextButtonText}
           </Text>
         </TouchableOpacity>
@@ -260,10 +253,6 @@ class CategoryDialog extends Component {
 
   render = () => {
     let { backgroundColor, textColor } = this.state
-
-    if (this.props.data.loading) {
-      return null
-    }
 
     return (
       <AnimatedDialog ref='dialog' color={backgroundColor} textColor={textColor}>
@@ -302,7 +291,7 @@ const enhance = compose(
         name: ''
       }),
       setColor: _ => (color) => ({ color }),
-      setColor: _ => (icon) => ({ icon }),
+      setIcon: _ => (icon) => ({ icon }),
       setName: _ => (name) => ({ name })
     }
   ),
@@ -318,8 +307,8 @@ const enhance = compose(
       let variables = {
         id: props.category && props.category.id,
         name: props.name,
-        icon: props.icon,
-        color: props.color
+        icon_id: props.icon.id,
+        color_id: props.color.id
       }
 
       if (props.category) {

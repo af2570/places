@@ -82,16 +82,16 @@ class AnimatedDialog extends Component {
         visible={isModalOpen}
       >
         <View style={styles.container}>
-          <SafeAreaView
-            style={styles.safeAreaView}
-            forceInset={{
-              top: 'always',
-              bottom: 'always',
-              horizontal: 'never'
-            }}
-          >
-            <TouchableOpacity style={styles.overlay} onPress={_ => this.close()} />
-            <Animated.View style={{ height: animatedHeight }}>
+          <Animated.View style={{ height: animatedHeight }}>
+            <SafeAreaView
+              style={styles.safeAreaView}
+              forceInset={{
+                top: 'always',
+                bottom: 'always',
+                horizontal: 'never'
+              }}
+            >
+              <TouchableOpacity style={styles.overlay} onPress={_ => this.close()} />
               <View
                 style={[
                   styles.dialog,
@@ -103,8 +103,8 @@ class AnimatedDialog extends Component {
                   {this.props.children}
                 </View>
               </View>
-            </Animated.View>
-          </SafeAreaView>
+            </SafeAreaView>
+          </Animated.View>
         </View>
       </Modal>
     )

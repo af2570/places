@@ -12,9 +12,11 @@ export const SearchPlaces = gql`
     ) @skip(if: $skip) {
       id
       name
-      type
-      categories
-      phone
+      categories {
+        id
+        name
+        pluralName
+      }
       address
       city
       state

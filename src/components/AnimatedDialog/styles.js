@@ -3,6 +3,7 @@ import { colors } from '../../styles'
 
 export default StyleSheet.create({
   container: {
+    ...StyleSheet.absoluteFillObject,
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'rgba(0,0,0,0.6)'
@@ -10,6 +11,7 @@ export default StyleSheet.create({
   safeAreaView: {
     flex: 1,
     position: 'relative',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -40,8 +42,5 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
     fontWeight: 'bold'
-  },
-  body: {
-    flex: 1
   }
 })

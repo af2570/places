@@ -1,17 +1,26 @@
 import {
   StyleSheet,
-  Platform
+  Platform,
+  Dimensions
 } from 'react-native'
 import { colors } from '../../styles'
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    maxHeight: Dimensions.get('window').height * 0.6,
+    width: Dimensions.get('window').width * 0.8,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10
   },
@@ -21,19 +30,20 @@ export default StyleSheet.create({
     textAlign: 'center'
   },
   body: {
-    flex: 1
+    flex: 1,
+    paddingHorizontal: 10
   },
   wrappedList: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     flexWrap: 'wrap'
   },
   option: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 40,
-    width: 40,
-    borderRadius: 20,
+    height: 50,
+    width: 50,
+    borderRadius: 25,
     margin: 5
   },
   selectedOption: {
@@ -47,10 +57,12 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   bigIcon: {
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    marginBottom: 10
+    height: 60,
+    width: 60,
+    borderRadius: 30,
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   inputContainer: {
     borderBottomWidth: 1,
@@ -59,7 +71,8 @@ export default StyleSheet.create({
     paddingBottom: Platform.select({
       ios: 15,
       android: 7
-    })
+    }),
+    marginHorizontal: 10
   },
   input: {
     color: colors.lightAccent,

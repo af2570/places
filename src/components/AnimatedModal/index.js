@@ -4,7 +4,9 @@ import {
   Text,
   Animated,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView,
+  Dimensions
 } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { SafeAreaView } from 'react-navigation'
@@ -12,19 +14,21 @@ import { SafeAreaView } from 'react-navigation'
 import styles from './styles'
 import { colors } from '../../styles'
 
+let deviceHeight = Dimensions.get('window').height
+
 class AnimatedModal extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       isModalOpen: false,
-      animatedHeight: new Animated.Value(0)
+      animatedHeight: new Animated.Value(deviceHeight)
     }
   }
 
   animateModal = (height, cb = () => {}) => {
     Animated.timing(this.state.animatedHeight, {
-      toValue: height,
+      toValue: deviceHeight - height,
       duration: 400
     }).start(cb)
   }
@@ -74,9 +78,9 @@ class AnimatedModal extends Component {
         onRequestClose={this.close}
         visible={isModalOpen}
       >
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <TouchableOpacity style={styles.overlay} onPress={this.close} />
-          <Animated.View style={{ height: animatedHeight }}>
+          <Animated.View style={{ marginTop: animatedHeight, height: '100%' }}>
             <SafeAreaView style={styles.modal} forceInset={{ bottom: 'always', horizontal: 'never' }}>
               {this._renderHeader()}
               <View style={styles.body}>
@@ -84,7 +88,7 @@ class AnimatedModal extends Component {
               </View>
             </SafeAreaView>
           </Animated.View>
-        </View>
+        </ScrollView>
       </Modal>
     )
   }

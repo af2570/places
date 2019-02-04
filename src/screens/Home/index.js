@@ -2,16 +2,13 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  Image,
   TextInput,
   TouchableOpacity,
-  FlatList,
-  Alert
+  FlatList
 } from 'react-native'
 import { Icon } from 'react-native-elements'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
-import { AnimatedModal, CategoryDialog } from '../../components'
-import { Pin } from '../../images'
+import { AnimatedModal } from '../../components'
 
 import { compose, withStateHandlers } from 'recompose'
 import { withNav, withAuth } from '../../../lib/recompose'
@@ -27,7 +24,6 @@ import { DEFAULT_LOCATION } from '../../../lib/constants'
 class Home extends Component {
   constructor(props) {
     super(props)
-    let region = null
 
     this.state = {
       searchText: '',
@@ -80,7 +76,8 @@ class Home extends Component {
   }
 
   onRegionChange = (region) => {
-    console.log('Change region', region)
+    console.log('Change region', region, this.refs.mapview)
+
     this.props.setRegion(region)
   }
 
@@ -104,22 +101,28 @@ class Home extends Component {
       (place, i) => (
         <Marker
           key={i}
-          image={Pin}
+          // image={Pin}
           coordinate={{
             latitude: place.location.lat,
             longitude: place.location.lng
           }}
           flat={true}
           onPress={_ => this.onPressSearchMarker(place)}
-        />
+        >
+          <View
+            style={{
+              backgroundColor: 'red',
+              height: 10,
+              width: 10,
+              borderRadius: 10
+            }}
+          />
+        </Marker>
       )
     )
   }
 
   _renderSearchResult = ({ item, index }) => {
-    const title = `${index + 1}. ${item.name}`
-    const address = item.address
-
     // TODO: make this a swipeable component
 
     return (
@@ -130,10 +133,11 @@ class Home extends Component {
         <Text style={styles.rowSubtitle}>
           {item.address}
         </Text>
+        
         {item.added &&
           <View style={styles.rowLine}>
-            <Icon name='person-pin' size={17} color={colors.lightAccent} />
-            <Text style={styles.rowSubtitle}>
+            <Icon name='person-pin' size={20} color={colors.lightAccent} />
+            <Text style={styles.rowText}>
               You have saved this location
             </Text>
           </View>
@@ -152,16 +156,16 @@ class Home extends Component {
       return null
     }
 
+    // TODO: react-native-snap-carousel to display search result list: (https://www.npmjs.com/package/react-native-snap-carousel)
+    // At the end of the list, have an option to "view all" - where limit will be greater
+
     return (
       <FlatList
         data={this.props.data.places}
         keyExtractor={item => item.id}
-        renderItem={({ item, index }) => (
-          <ListItem
-            title={`${index + 1}. ${item.name}`}
-            subtitle={item.address}
-            onPress={_ => this.onPressSearchResult(item)}
-          />
+        renderItem={this._renderSearchResult}
+        ItemSeparatorComponent={_ => (
+          <View style={styles.divider} />
         )}
         ListEmptyComponent={_ => (
           <View style={styles.emptyList}>
@@ -194,9 +198,6 @@ class Home extends Component {
   }
 
   render = () => {
-
-    console.log('CATEGORY: ', this.refs.categoryDialog)
-
     // TODO: Option to "Redo Search in Area"
 
     const { searchText } = this.state
@@ -217,7 +218,7 @@ class Home extends Component {
           showsUserLocation={true}
           onPress={this.onPressLocation}
           onPoiClick={this.onPressLocation}
-          onRegionChange={_ => this.refs.search.blur()}
+          // onRegionChange={_ => this.refs.search.blur()}
           onRegionChangeComplete={this.onRegionChange}
         >
           {this._renderSearchMarkers()}
@@ -246,7 +247,6 @@ class Home extends Component {
         >
           {this._renderSearchResultList()}
         </AnimatedModal>
-        <CategoryDialog ref='categoryDialog' />
       </View>
     )
   }
