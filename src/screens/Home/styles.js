@@ -12,6 +12,9 @@ export default StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   searchContainer: {
+    position: 'absolute', 
+    top: 0,
+    width: '100%',
     padding: 10,
     paddingTop: 70,
     shadowRadius: 2,

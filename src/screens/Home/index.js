@@ -259,6 +259,14 @@ class Home extends Component {
         >
           {this._renderSearchMarkers()}
         </MapView>
+        <AnimatedModal 
+          ref='modal'
+          scrollable 
+          onClose={this.turnOffSearchBg}
+          onOpen={this.turnOnSearchBg}
+        >
+          {this._renderSearchResultList()}
+        </AnimatedModal>
         <Animated.View 
           style={[
             styles.searchContainer, 
@@ -293,14 +301,6 @@ class Home extends Component {
             />
           </Animated.View>
         </Animated.View>
-        <AnimatedModal 
-          ref='modal'
-          scrollable 
-          onClose={this.turnOffSearchBg}
-          onOpen={this.turnOnSearchBg}
-        >
-          {this._renderSearchResultList()}
-        </AnimatedModal>
       </View>
     )
   }
