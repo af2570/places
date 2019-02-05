@@ -25,19 +25,11 @@ export default StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.main
-  },
-  headerIcon: {
-    padding: 7
-  },
-  headerText: {
-    padding: 7,
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 15,
-    fontWeight: 'bold'
+    // backgroundColor: colors.main
+    backgroundColor: '#fff',
+    padding: 2
   },
   body: {
     flex: 1

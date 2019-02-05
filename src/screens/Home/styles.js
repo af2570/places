@@ -12,21 +12,30 @@ export default StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   searchContainer: {
-    flexDirection: 'row',
-    marginHorizontal: 20,
-    marginTop: 70,
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
+    padding: 10,
+    paddingTop: 70,
     shadowRadius: 2,
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2
     },
     elevation: 1
+  },
+  searchBar: {
+    flexDirection: 'row',
+    borderRadius: 10,
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowRadius: 2,
+    elevation: 1,
+    shadowOffset: {
+      width: 0,
+      height: 2
+    }
   },
   searchButton: {
     padding: 10,
@@ -39,7 +48,7 @@ export default StyleSheet.create({
   divider: {
     marginHorizontal: 10,
     height: 1,
-    backgroundColor: colors.lightAccent,
+    backgroundColor: '#bbb',
     opacity: 0.7
   },
   flexRow: {

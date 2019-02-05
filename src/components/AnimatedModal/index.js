@@ -1,18 +1,16 @@
 import React, { Component } from 'react'
 import {
   View,
-  Text,
   Animated,
-  Modal,
   TouchableOpacity,
   ScrollView,
   Dimensions
 } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { SafeAreaView } from 'react-navigation'
+import PropTypes from 'prop-types'
 
 import styles from './styles'
-import { colors } from '../../styles'
 
 let deviceHeight = Dimensions.get('window').height
 
@@ -34,17 +32,19 @@ class AnimatedModal extends Component {
   }
 
   close = () => {
+    this.props.onClose()
     this.animateModal(0, _ => {
       this.setState({ isModalOpen: false })
     })
   }
 
   open = () => {
-    const height = this.props.height || 400
-    this.setState(
-      { isModalOpen: true },
-      _ => this.animateModal(height)
-    )
+    this.setState({ 
+      isModalOpen: true 
+    }, _ => {
+      this.props.onOpen()
+      this.animateModal(this.props.height)
+    })
   }
 
   isOpen = () => {
@@ -52,46 +52,51 @@ class AnimatedModal extends Component {
   }
 
   _renderHeader = () => {
-    if (!this.props.withHeader) {
+    if (!this.props.scrollable) {
       return null
     }
 
     return (
       <View style={styles.header}>
-        <View style={{ width: 28 + 14 }}/>
-        {this.props.title &&
-          <Text style={styles.headerText}>{this.props.title}</Text>
-        }
-        <TouchableOpacity style={styles.headerIcon} onPress={_ => this.close()}>
-          <Icon name='close' color='#fff' />
-        </TouchableOpacity>
+        <Icon color='#bbb' name='minus' type='entypo' />
       </View>
     )
   }
 
   render = () => {
     let { isModalOpen, animatedHeight } = this.state
+    if (!isModalOpen) return null
     return (
-      <Modal
-        transparent
-        animationType='none'
-        onRequestClose={this.close}
-        visible={isModalOpen}
+      <ScrollView 
+        style={styles.container}
+        scrollEnabled={this.props.scrollable}
+        ref='scrollView'
       >
-        <ScrollView style={styles.container}>
-          <TouchableOpacity style={styles.overlay} onPress={this.close} />
-          <Animated.View style={{ marginTop: animatedHeight, height: '100%' }}>
-            <SafeAreaView style={styles.modal} forceInset={{ bottom: 'always', horizontal: 'never' }}>
-              {this._renderHeader()}
-              <View style={styles.body}>
-                {this.props.children}
-              </View>
-            </SafeAreaView>
-          </Animated.View>
-        </ScrollView>
-      </Modal>
+        <TouchableOpacity style={styles.overlay} onPress={this.close} />
+        <Animated.View style={{ marginTop: animatedHeight, height: '100%' }}>
+          <SafeAreaView style={styles.modal} forceInset={{ bottom: 'always', horizontal: 'never' }}>
+            {this._renderHeader()}
+            <View style={styles.body}>
+              {this.props.children}
+            </View>
+          </SafeAreaView>
+        </Animated.View>
+      </ScrollView>
     )
   }
+}
+
+AnimatedModal.propTypes = {
+  height: PropTypes.number,
+  scrollable: PropTypes.bool,
+  onClose: PropTypes.func,
+  onOpen: PropTypes.func
+}
+
+AnimatedModal.defaultProps = {
+  height: deviceHeight / 2,
+  onClose: _ => {},
+  onOpen: _ => {}
 }
 
 export default AnimatedModal

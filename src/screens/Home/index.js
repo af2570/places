@@ -4,7 +4,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  Animated
 } from 'react-native'
 import { Icon } from 'react-native-elements'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
@@ -27,8 +28,23 @@ class Home extends Component {
 
     this.state = {
       searchText: '',
-      highlighted: null
+      highlighted: null,
+      searchBg: new Animated.Value(0)
     }
+  }
+
+  turnOnSearchBg = () => {
+    Animated.timing(this.state.searchBg, {
+      toValue: 150,
+      duration: 400
+    }).start()
+  }
+
+  turnOffSearchBg = () => {
+    Animated.timing(this.state.searchBg, {
+      toValue: 0,
+      duration: 400
+    }).start()
   }
 
   toggleMenu = () => {
@@ -200,8 +216,28 @@ class Home extends Component {
   render = () => {
     // TODO: Option to "Redo Search in Area"
 
-    const { searchText } = this.state
+    const { searchText, searchBg } = this.state
     const { region } = this.props
+
+    const searchBgColor = searchBg.interpolate({
+      inputRange: [0, 150],
+      outputRange: ['rgba(255,255,255,0)', 'rgba(255,255,255,1)']
+    })
+
+    const searchBorderWidth = searchBg.interpolate({
+      inputRange: [0, 150],
+      outputRange: [0, 1]
+    })
+
+    const searchShadowOpacity = searchBg.interpolate({
+      inputRange: [0, 150],
+      outputRange: [0.2, 0]
+    })
+
+    const searchBgShadowOpacity = searchBg.interpolate({
+      inputRange: [0, 150],
+      outputRange: [0, 0.2]
+    })
 
     return (
       <View style={styles.main}>
@@ -223,27 +259,45 @@ class Home extends Component {
         >
           {this._renderSearchMarkers()}
         </MapView>
-        <View style={styles.searchContainer}>
-          {this._renderSearchButton()}
-          <TextInput
-            ref='search'
-            placeholder='Search'
-            value={searchText}
-            onChangeText={this.onChangeSearchText}
-            onSubmitEditing={this.onSubmitSearchText}
-            onFocus={this.onFocusSearchBar}
-            clearTextOnFocus={true}
-            autoCorrect={false}
-            clearButtonMode='always'
-            autoCapitalize='none'
-            style={styles.search}
-            returnKeyType='search'
-          />
-        </View>
-        <AnimatedModal
-          withHeader
-          title={`Showing results for "${searchText}"`}
+        <Animated.View 
+          style={[
+            styles.searchContainer, 
+            { 
+              shadowOpacity: searchBgShadowOpacity,
+              backgroundColor: searchBgColor 
+            }
+          ]}
+        >
+          <Animated.View 
+            style={[
+              styles.searchBar,
+              {
+                shadowOpacity: searchShadowOpacity,
+                borderWidth: searchBorderWidth
+              }
+            ]}
+          >
+            {this._renderSearchButton()}
+            <TextInput
+              ref='search'
+              placeholder='Search'
+              value={searchText}
+              onChangeText={this.onChangeSearchText}
+              onSubmitEditing={this.onSubmitSearchText}
+              onFocus={this.onFocusSearchBar}
+              autoCorrect={false}
+              clearButtonMode='always'
+              autoCapitalize='none'
+              style={styles.search}
+              returnKeyType='search'
+            />
+          </Animated.View>
+        </Animated.View>
+        <AnimatedModal 
           ref='modal'
+          scrollable 
+          onClose={this.turnOffSearchBg}
+          onOpen={this.turnOnSearchBg}
         >
           {this._renderSearchResultList()}
         </AnimatedModal>
