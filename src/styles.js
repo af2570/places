@@ -2,8 +2,15 @@ import { StyleSheet } from 'react-native'
 
 export const shared = {
   main: {
-    flex: 1,
-    ...StyleSheet.absoluteFillObject
+    ...StyleSheet.absoluteFillObject,
+    flex: 1
+  },
+  loading: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }
 

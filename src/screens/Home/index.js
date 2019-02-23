@@ -219,6 +219,7 @@ class Home extends Component {
     const { searchText, searchBg } = this.state
     const { region } = this.props
 
+    // Fade in search styles when modal opens
     const searchBgColor = searchBg.interpolate({
       inputRange: [0, 150],
       outputRange: ['rgba(255,255,255,0)', 'rgba(255,255,255,1)']
