@@ -8,7 +8,7 @@ import {
   FlatList,
   ActivityIndicator
 } from 'react-native'
-import { Icon } from 'reeact-native-elements'
+import { Icon } from 'react-native-elements'
 import moment from 'moment'
 
 import { compose, withStateHandlers } from 'recompose'

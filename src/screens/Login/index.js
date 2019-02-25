@@ -71,7 +71,7 @@ class Login extends Component {
       LocalStorage.setItem(ACCESS_TOKEN, token)
       await client.resetStore()
       // Alert.alert('Success!', 'You were logged in.')
-      this.props.navigate('Home')
+      this.props.navigate('MapSearch')
     } catch (err) {
       Alert.alert(
         'Oops!',

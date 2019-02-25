@@ -22,7 +22,7 @@ import styles from './styles'
 
 import { DEFAULT_LOCATION } from '../../../lib/constants'
 
-class Home extends Component {
+class MapSearch extends Component {
   constructor(props) {
     super(props)
 
@@ -45,12 +45,6 @@ class Home extends Component {
       toValue: 0,
       duration: 400
     }).start()
-  }
-
-  toggleMenu = () => {
-    // TODO: implement menu (with logout option)
-    this.refs.search.blur()
-    this.props.navigation.openDrawer()
   }
 
   clearSearch = () => {
@@ -193,26 +187,6 @@ class Home extends Component {
 
   }
 
-  _renderSearchButton = () => {
-    let { keyword } = this.props
-
-    let icon, action
-
-    if (keyword) {
-      icon = 'arrow-back'
-      action = this.clearSearch
-    } else {
-      icon = 'menu'
-      action = this.toggleMenu
-    }
-
-    return (
-      <TouchableOpacity style={styles.searchButton} onPress={action}>
-        <Icon name={icon} color={colors.dark} />
-      </TouchableOpacity>
-    )
-  }
-
   render = () => {
     // TODO: Option to "Redo Search in Area"
 
@@ -286,7 +260,9 @@ class Home extends Component {
               }
             ]}
           >
-            {this._renderSearchButton()}
+            <View style={styles.searchButton}>
+              <Icon name='search' color={colors.dark} />
+            </View>
             <TextInput
               ref='search'
               placeholder='Search'
@@ -381,4 +357,4 @@ const enhance = compose(
   })
 )
 
-export default enhance(Home)
+export default enhance(MapSearch)

@@ -1,9 +1,13 @@
 import Splash from './Splash'
 import Login from './Login'
-import Home from './Home'
+import MapSearch from './MapSearch'
+import PlaceInfo from './PlaceInfo'
+import Users from './Users'
 
 export {
   Splash,
   Login,
-  Home
+  MapSearch,
+  PlaceInfo,
+  Users
 }

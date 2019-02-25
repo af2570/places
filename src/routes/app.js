@@ -1,22 +1,38 @@
 import React from 'react'
 import { Icon } from 'react-native-elements'
 
-import { Home } from '../screens'
+import { 
+  MapSearch, 
+  PlaceInfo,
+  Users
+} from '../screens'
 
 import { colors } from '../styles'
 
-export default {
-  Home: {
-    route: 'Home',
-    screen: Home,
+export const MapRoutes = {
+  MapSearch: {
+    route: 'MapSearch',
+    screen: MapSearch,
     navigationOptions: {
-      drawerLabel: 'Map',
-      drawerIcon: ({ focused, tintColor }) => (
-        <Icon
-          name='map'
-          color={tintColor}
-        />
-      ),
+      gesturesEnabled: false,
+      header: null
+    }
+  },
+  PlaceInfo: {
+    route: 'PlaceInfo',
+    screen: PlaceInfo,
+    navigationOptions: {
+      tabBarVisible: false,
+      header: null
+    }
+  }
+}
+
+export const UserRoutes = {
+  Users: {
+    route: 'Users',
+    screen: Users,
+    navigationOptions: {
       gesturesEnabled: false,
       header: null
     }

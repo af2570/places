@@ -1,35 +1,59 @@
 import React from 'react'
-import { View } from 'react-native'
 import {
   createStackNavigator,
   createSwitchNavigator,
-  createDrawerNavigator
+  createBottomTabNavigator,
+  createAppContainer
 } from 'react-navigation'
+import { Icon } from 'react-native-elements'
 
 import AuthRoutes from './auth'
-import AppRoutes from './app'
+import {
+  MapRoutes,
+  UserRoutes
+} from './app'
 
 import { Splash } from '../screens'
-import { DrawerContentComponent } from '../components'
 import { colors } from '../styles'
 
 const AuthStack = createStackNavigator(AuthRoutes)
 
-const AppStack = createDrawerNavigator(AppRoutes, {
-  // drawerWidth: 100,
-  contentComponent: DrawerContentComponent,
-  drawerType: 'back',
-  contentOptions: {
-    activeTintColor: colors.dark,
-    inactiveTintColor: colors.lightAccent,
-    // activeBackgroundColor: colors.main
+const MapStack = createStackNavigator(MapRoutes)
+const UserStack = createStackNavigator(UserRoutes)
+
+const AppTabStack = createBottomTabNavigator({
+  Map: MapStack,
+  Users: UserStack
+}, {
+  defaultNavigationOptions: ({ navigation }) => ({
+    tabBarIcon: ({ tintColor }) => {
+      let iconName
+      switch (navigation.state.routeName) {
+        case 'Map':
+          iconName = 'map'
+          break;
+        case 'Users':
+          iconName = 'people'
+          break;
+      }
+
+      return (
+        <Icon name={iconName} color={tintColor} />
+      )
+    }
+  }),
+  tabBarOptions: {
+    showLabel: false,
+    style: { padding: 10 },
+    activeTintColor: colors.main,
+    inactiveTintColor: colors.lightAccent
   }
 })
 
 const Router = createSwitchNavigator({
   Splash,
   Auth: AuthStack,
-  App: AppStack
+  App: AppTabStack
 })
 
-export default Router
+export default createAppContainer(Router)

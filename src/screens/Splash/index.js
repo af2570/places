@@ -27,7 +27,7 @@ class Splash extends Component {
     if (!viewer) {
       this.props.navigate('Login')
     } else {
-      this.props.navigate('Home')
+      this.props.navigate('MapSearch')
     }
   }
 
