@@ -49,8 +49,10 @@ class MapSearch extends Component {
 
   clearSearch = () => {
     this.refs.modal.close()
-    this.setState({ searchText: '' })
-    this.props.setKeyword('')
+    this.setState({ 
+      searchText: '' 
+    }, _ => this.props.setKeyword(''))
+    
   }
 
   onFocusSearchBar = () => {
@@ -58,7 +60,11 @@ class MapSearch extends Component {
   }
 
   onChangeSearchText = (text) => {
-    this.setState({ searchText: text })
+    if (!text) {
+      this.clearSearch()
+    } else {
+      this.setState({ searchText: text })
+    }
   }
 
   onSubmitSearchText = () => {
@@ -78,21 +84,24 @@ class MapSearch extends Component {
       name
     } = e.nativeEvent
     this.refs.search.blur()
-    console.log('Press location', { coordinate, position, placeId, name })
+    // console.log('Press location', { coordinate, position, placeId, name })
   }
 
   onPressSearchResult = (place) => {
-    console.log('Pressed place in list: ', place)
+    this.props.navigate('PlaceInfo', {
+      id: place.id
+    })
+    // console.log('Pressed place in list: ', place)
   }
 
   onRegionChange = (region) => {
-    console.log('Change region', region, this.refs.mapview)
+    // console.log('Change region', region, this.refs.mapview)
 
     this.props.setRegion(region)
   }
 
   onPressSearchMarker = (place) => {
-    console.log('Pressed place: ', place)
+    // console.log('Pressed place: ', place)
     this.setState({ highlighted: place.id })
     // TODO: some way to add location to list
   }
@@ -119,14 +128,7 @@ class MapSearch extends Component {
           flat={true}
           onPress={_ => this.onPressSearchMarker(place)}
         >
-          <View
-            style={{
-              backgroundColor: 'red',
-              height: 10,
-              width: 10,
-              borderRadius: 10
-            }}
-          />
+          <View style={styles.searchMarker} />
         </Marker>
       )
     )
@@ -137,21 +139,28 @@ class MapSearch extends Component {
 
     return (
       <TouchableOpacity style={styles.row} onPress={_ => this.onPressSearchResult(item)}>
-        <Text style={styles.rowTitle}>
-          {index + 1}. {item.name}
-        </Text>
-        <Text style={styles.rowSubtitle}>
-          {item.address}
-        </Text>
-        
-        {item.added &&
-          <View style={styles.rowLine}>
-            <Icon name='person-pin' size={20} color={colors.lightAccent} />
-            <Text style={styles.rowText}>
-              You have saved this location
-            </Text>
-          </View>
-        }
+        <View style={styles.rowContent}>
+          <Text style={styles.rowTitle}>
+            {index + 1}. {item.name}
+          </Text>
+          <Text style={styles.rowSubtitle}>
+            {item.address}
+          </Text>
+          
+          {item.added &&
+            <View style={styles.rowLine}>
+              <Icon name='person-pin' size={20} color={colors.lightAccent} />
+              <Text style={styles.rowText}>
+                You have saved this location
+              </Text>
+            </View>
+          }
+        </View>
+        <Icon
+          name='chevron-thin-right'
+          type='entypo'
+          color={colors.lightAccent}
+        />
       </TouchableOpacity>
     )
   }
@@ -347,7 +356,6 @@ const enhance = compose(
   graphql(SearchPlaces, {
     options: props => ({
       fetchPolicy: 'network-only',
-      onCompleted: data => console.log('QUERY COMPLETE: ', data),
       variables: {
         skip: !props.keyword,
         keyword: props.keyword,

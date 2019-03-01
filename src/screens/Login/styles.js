@@ -2,7 +2,7 @@ import {
   StyleSheet,
   Platform
 } from 'react-native'
-import { shared, colors } from '../../styles'
+import { shared, colors, utils } from '../../styles'
 
 export default StyleSheet.create({
   main: {
@@ -10,53 +10,53 @@ export default StyleSheet.create({
     backgroundColor: colors.main
   },
   logo: {
-    marginBottom: 100,
+    marginBottom: utils.normalizeByHeight(100),
     marginTop: Platform.select({
-      ios: 200,
-      android: 160
+      ios: utils.normalizeByHeight(200),
+      android: utils.normalizeByHeight(160)
     }),
-    width: 200,
-    height: 200,
+    width: utils.normalize(200),
+    height: utils.normalize(200),
     alignSelf: 'center'
   },
   loginContainer: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-end',
-    paddingBottom: 70
+    paddingBottom: utils.normalize(70)
   },
   inputContainer: {
     borderBottomWidth: 1,
-    borderColor: '#fff',
+    borderColor: colors.white,
     flexDirection: 'row',
     paddingBottom: Platform.select({
-      ios: 15,
-      android: 7
+      ios: utils.normalize(15),
+      android: utils.normalize(7)
     }),
-    margin: 15
+    margin: utils.normalize(15)
   },
   input: {
-    color: '#fff',
-    paddingLeft: 35,
+    color: colors.white,
+    paddingLeft: utils.normalize(35),
     flex: 1
   },
   inputIcon: {
     position: 'absolute',
     alignSelf: 'center',
     paddingBottom: Platform.select({
-      ios: 18,
-      android: 10
+      ios: utils.normalize(18),
+      android: utils.normalize(10)
     })
   },
   loginButton: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
-    margin: 15
+    height: utils.normalize(50),
+    margin: utils.normalize(15)
   },
   loginButtonText: {
     color: colors.main,
-    fontSize: 15
+    fontSize: utils.normalize(15)
   }
 })

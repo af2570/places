@@ -3,7 +3,7 @@ import {
   Platform,
   Dimensions
 } from 'react-native'
-import { colors } from '../../styles'
+import { colors, utils } from '../../styles'
 
 export default StyleSheet.create({
   container: {
@@ -16,22 +16,22 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10
+    padding: utils.normalize(10)
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10
+    padding: utils.normalize(10)
   },
   headerText: {
-    fontSize: 17,
+    fontSize: utils.normalize(17),
     fontWeight: 'bold',
     textAlign: 'center'
   },
   body: {
     flex: 1,
-    paddingHorizontal: 10
+    paddingHorizontal: utils.normalize(10)
   },
   wrappedList: {
     flexDirection: 'row',
@@ -41,10 +41,10 @@ export default StyleSheet.create({
   option: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    margin: 5
+    height: utils.normalize(50),
+    width: utils.normalize(50),
+    borderRadius: utils.normalize(25),
+    margin: utils.normalize(5)
   },
   selectedOption: {
     borderWidth: 2,
@@ -57,10 +57,10 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   bigIcon: {
-    height: 60,
-    width: 60,
-    borderRadius: 30,
-    marginBottom: 20,
+    height: utils.normalize(60),
+    width: utils.normalize(60),
+    borderRadius: utils.normalize(30),
+    marginBottom: utils.normalize(20),
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -69,10 +69,10 @@ export default StyleSheet.create({
     borderColor: colors.lightAccent,
     flexDirection: 'row',
     paddingBottom: Platform.select({
-      ios: 15,
-      android: 7
+      ios: utils.normalize(15),
+      android: utils.normalize(7)
     }),
-    marginHorizontal: 10
+    marginHorizontal: utils.normalize(10)
   },
   input: {
     color: colors.lightAccent,

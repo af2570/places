@@ -1,8 +1,5 @@
-import {
-  StyleSheet,
-  Platform
-} from 'react-native'
-import { shared, colors } from '../../styles'
+import { StyleSheet } from 'react-native'
+import { shared, colors, utils } from '../../styles'
 
 export default StyleSheet.create({
   main: {
@@ -15,10 +12,11 @@ export default StyleSheet.create({
     position: 'absolute', 
     top: 0,
     width: '100%',
-    padding: 10,
-    paddingTop: 70,
+    padding: utils.normalize(10),
+    paddingTop: utils.normalizeByHeight(70),
     shadowRadius: 2,
-    shadowColor: '#000',
+    shadowColor: colors.black,
+    shadowOpacity: 0.8,
     shadowOffset: {
       width: 0,
       height: 2
@@ -27,31 +25,32 @@ export default StyleSheet.create({
   },
   searchBar: {
     flexDirection: 'row',
-    borderRadius: 10,
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
+    borderRadius: utils.normalize(10),
+    borderColor: colors.greyscale.smoke,
+    backgroundColor: colors.white,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowRadius: 2,
-    elevation: 1,
+    shadowOpacity: 0.8,
     shadowOffset: {
       width: 0,
       height: 2
-    }
+    },
+    elevation: 1
   },
   searchButton: {
-    padding: 10,
-    marginRight: 10
+    padding: utils.normalize(10),
+    marginRight: utils.normalize(10)
   },
   search: {
     flex: 1,
-    color: colors.dark
+    color: colors.greyscale.dark
   },
   divider: {
-    marginHorizontal: 10,
+    marginHorizontal: utils.normalize(10),
     height: 1,
-    backgroundColor: '#bbb',
+    backgroundColor: colors.greyscale.smoke,
     opacity: 0.7
   },
   flexRow: {
@@ -64,27 +63,39 @@ export default StyleSheet.create({
     alignItems: 'flex-end'
   },
   row: {
-    padding: 10,
+    padding: utils.normalize(10),
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  rowContent: {
     flexDirection: 'column',
+    alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start'
+    flex: 1,
+    marginRight: utils.normalize(10)
   },
   rowTitle: {
-    marginBottom: 7,
-    fontSize: 17,
-    color: colors.dark,
+    marginBottom: utils.normalize(7),
+    fontSize: utils.normalize(17),
+    color: colors.greyscale.dark,
     fontWeight: 'bold'
   },
   rowSubtitle: {
-    marginBottom: 7,
-    fontSize: 14,
-    color: colors.lightAccent
+    marginBottom: utils.normalize(7),
+    fontSize: utils.normalize(14),
+    color: colors.greyscale.grey
   },
   rowLine: {
     flexDirection: 'row'
   },
   rowText: {
-    fontSize: 14,
-    color: colors.lightAccent
+    fontSize: utils.normalize(14),
+    color: colors.greyscale.grey
+  },
+  searchMarker: {
+    backgroundColor: 'red',
+    height: utils.normalize(10),
+    width: utils.normalize(10),
+    borderRadius: utils.normalize(5)
   }
 })

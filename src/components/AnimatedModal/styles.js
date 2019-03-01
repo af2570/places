@@ -14,7 +14,8 @@ export default StyleSheet.create({
     width: '100%',
     alignSelf: 'flex-end',
     flexDirection: 'column',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
+    shadowColor: colors.black,
     shadowOpacity: 0.2,
     shadowRadius: 2,
     shadowOffset: {
@@ -28,7 +29,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: colors.main
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     padding: 2
   },
   body: {

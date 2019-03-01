@@ -2,7 +2,7 @@ import {
   StyleSheet,
   Platform
 } from 'react-native'
-import { shared, colors } from '../../styles'
+import { shared, colors, utils } from '../../styles'
 
 export default StyleSheet.create({
   main: {
@@ -10,13 +10,13 @@ export default StyleSheet.create({
     backgroundColor: colors.main
   },
   logo: {
-    marginBottom: 100,
+    marginBottom: utils.normalizeByHeight(100),
     marginTop: Platform.select({
-      ios: 200,
-      android: 160
+      ios: utils.normalizeByHeight(200),
+      android: utils.normalizeByHeight(160)
     }),
-    width: 200,
-    height: 200,
+    width: utils.normalize(200),
+    height: utils.normalize(200),
     alignSelf: 'center'
   }
 })

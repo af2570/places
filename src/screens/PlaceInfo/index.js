@@ -9,15 +9,17 @@ import {
   ActivityIndicator
 } from 'react-native'
 import { Icon } from 'react-native-elements'
+import { WhiteSkyline } from '../../images'
 import moment from 'moment'
 
-import { compose, withStateHandlers } from 'recompose'
+import { compose, withStateHandlers, withProps } from 'recompose'
 import { withAuth, withNav } from '../../../lib/recompose'
 
 import { graphql } from 'react-apollo'
 import { PlaceQuery } from './queries'
 
 import styles from './styles'
+import { colors } from '../../styles';
 
 class PlaceInfo extends React.Component {
   constructor(props) {
@@ -39,24 +41,33 @@ class PlaceInfo extends React.Component {
 
     if (!data.place.topImage) {
       return (
-        <View style={styles.noImage}>
-          {!data.loading && (
-            <Icon
-              name='md-images'
-              type='ionicon'
-              color='#fff'
-            />
-          )}
+        <View style={[styles.topImageContainer, styles.noImageContainer]}>
+          <Image
+            style={styles.topImagePlaceholder}
+            source={WhiteSkyline}
+            resizeMode='contain'
+          />
         </View>
       )
     }
 
     // TODO: multiple images
     return (
-      <Image
-        style={styles.topImage}
-        source={{ uri: data.place.topImage.url }}
-      />
+      <View style={styles.topImageContainer}>
+        <Image
+          style={styles.topImage}
+          source={{ uri: data.place.topImage.url }}
+          blurRadius={10}
+          resizeMode='cover'
+        />
+
+        <Image
+          style={styles.topImage}
+          source={{ uri: data.place.topImage.url }}
+          resizeMode='contain'
+        />
+      </View>
+     
     )
   }
 
@@ -116,30 +127,30 @@ class PlaceInfo extends React.Component {
     if (!data || !data.place) return null 
 
     return (
-      <View style={[styles.infoSection, styles.accentBg]}>
+      <View style={[styles.infoSection, styles.noPadding]}>
         <View style={styles.buttonRow}>
           <TouchableOpacity
-            style={styles.iconButton}
+            style={[styles.buttonInRow, styles.iconButton]}
             onPress={this.addNote}
           >
             <Icon
               name='note-add'
-              color='#fff'
+              color={colors.main}
             />
-            <Text style={[styles.iconButtonText, styles.whiteText]}>
+            <Text style={[styles.iconButtonText, styles.accentText]}>
               Add a Note
             </Text>
           </TouchableOpacity>
-          <View style={[styles.verticalDivider, styles.whiteDivider]} />
+          <View style={[styles.verticalDivider]} />
           <TouchableOpacity
-            style={styles.iconButton}
+            style={[styles.buttonInRow, styles.iconButton]}
             onPress={this.addToCollection}
           >
             <Icon
               name='library-add'
-              color='#fff'
+              color={colors.main}
             />
-            <Text style={[styles.iconButtonText, styles.whiteText]}>
+            <Text style={[styles.iconButtonText, styles.accentText]}>
               Add to Collection
             </Text>
           </TouchableOpacity>
@@ -176,7 +187,7 @@ class PlaceInfo extends React.Component {
       }
             
       days.push({
-        weekday: moment().isoWeekday(i),
+        weekday: moment().isoWeekday(i).format('dddd'),
         isToday: moment().isoWeekday() === i,
         hours
       })
@@ -187,7 +198,7 @@ class PlaceInfo extends React.Component {
         <Text style={styles.infoTitle}>Hours</Text>
         <FlatList
           data={days}
-          keyExtractor={item => item.day}
+          keyExtractor={item => item.weekday}
           scrollEnabled={false}
           renderItem={({ item }) => {
             let weekdayStyle = [styles.weekday]
@@ -199,7 +210,7 @@ class PlaceInfo extends React.Component {
             }
 
             if (!item.hours) {
-              hourStyle.push(styles.mutedText)
+              hourStyle.push(styles.noHours)
             }
             return (
               <View style={styles.hourRow}>
@@ -234,7 +245,7 @@ class PlaceInfo extends React.Component {
     if (this.props.data.loading) {
       return (
         <View style={styles.loading}>
-          <ActivityIndicator color='#fff' />
+          <ActivityIndicator color={colors.white} />
         </View>
       )
     }
@@ -245,7 +256,7 @@ class PlaceInfo extends React.Component {
       <View style={styles.main}>
         <ScrollView>
           {this._renderTopImage()}
-          <View style={styles.background}>
+          <View>
             {this._renderHeader()}
             {this._renderUserOptions()}
             {this._renderDescription()}
@@ -263,14 +274,30 @@ const enhance = compose(
   withAuth,
   withNav,
   withStateHandlers(
-    ({ navigation, screenProps }) => ({
+    ({ navigation }) => ({
       id: navigation.getParam('id')
-    }) 
+    })
+  ),
+  withProps(
+    props => ({
+      updateHeader: data => {
+        if (data.place) {
+          let placeName = data.place.name
+          let headerName = props.navigation.getParam('name')
+
+          if (!headerName || headerName !== placeName) {
+            props.navigation.setParams({
+              name: placeName
+            })
+          }
+        }
+      }
+    })
   ),
   graphql(PlaceQuery, {
     options: props => ({
       fetchPolicy: 'network-only',
-      onCompleted: data => console.log('QUERY COMPLETE: ', data),
+      onCompleted: props.updateHeader,
       variables: {
         id: props.id
       }

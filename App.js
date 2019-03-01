@@ -47,6 +47,7 @@ class App extends Component {
       <ApolloProvider client={client}>
           <View style={{ flex: 1 }}>
             <Navigator
+              onNavigationStateChange={null}
               screenProps={{
                 location: this.state.location
               }}
