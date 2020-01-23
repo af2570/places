@@ -27,15 +27,15 @@ class PlaceInfo extends React.Component {
     
   }
 
-  addNote = _ => {
+  addNote = () => {
     console.log('addNote')
   }
 
-  addToCollection = _ => {
+  addToCollection = () => {
     console.log('addToCollection')
   }
 
-  _renderTopImage = _ => {
+  _renderTopImage = () => {
     const { data } = this.props
     if (!data || !data.place) return null
 
@@ -71,7 +71,7 @@ class PlaceInfo extends React.Component {
     )
   }
 
-  _renderHeader = _ => {
+  _renderHeader = () => {
     const { data } = this.props
     if (!data || !data.place) return null
 
@@ -104,7 +104,7 @@ class PlaceInfo extends React.Component {
     )
   }
   
-  _renderDescription = _ => {
+  _renderDescription = () => {
     const { data } = this.props
     if (
       !data || 
@@ -122,7 +122,7 @@ class PlaceInfo extends React.Component {
     )
   }
 
-  _renderUserOptions = _ => {
+  _renderUserOptions = () => {
     const { data } = this.props
     if (!data || !data.place) return null 
 
@@ -159,7 +159,7 @@ class PlaceInfo extends React.Component {
     )
   }
 
-  _renderHours = _ => {
+  _renderHours = () => {
     const { data } = this.props
     if (
       !data ||
@@ -237,11 +237,11 @@ class PlaceInfo extends React.Component {
     )
   }
 
-  _renderContactInfo = _ => {
+  _renderContactInfo = () => {
     return null
   }
 
-  _renderLoading = _ => {
+  _renderLoading = () => {
     if (this.props.data.loading) {
       return (
         <View style={styles.loading}>
@@ -251,7 +251,7 @@ class PlaceInfo extends React.Component {
     }
   }
 
-  render = _ => {
+  render = () => {
     return (
       <View style={styles.main}>
         <ScrollView>

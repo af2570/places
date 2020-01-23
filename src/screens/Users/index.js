@@ -9,7 +9,7 @@ class Users extends React.Component {
     super(props)
   }
 
-  render = _ => {
+  render = () => {
     return (
       <View>
         <Text>Users</Text>

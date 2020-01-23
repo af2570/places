@@ -140,7 +140,7 @@ class CategoryDialog extends Component {
     return (
       <TouchableOpacity
         style={[styles.option, { backgroundColor: item.hex }]}
-        onPress={_ => this.props.setColor(item)}
+        onPress={() => this.props.setColor(item)}
       >
         {isSelected &&
           <Icon name='check' size={30} color='#fff' />
@@ -160,7 +160,7 @@ class CategoryDialog extends Component {
     }
 
     return (
-      <TouchableOpacity style={style} onPress={_ => this.props.setIcon(item)}>
+      <TouchableOpacity style={style} onPress={() => this.props.setIcon(item)}>
         <Icon {...item} color='#fff' size={30} />
       </TouchableOpacity>
     )
@@ -173,7 +173,7 @@ class CategoryDialog extends Component {
           <GridList
             data={this.props.data.colors}
             renderItem={this._renderColor}
-            ItemEmptyComponent={_ => <View style={styles.option} />}
+            ItemEmptyComponent={() => <View style={styles.option} />}
           />
         )
       case 1:
@@ -181,7 +181,7 @@ class CategoryDialog extends Component {
           <GridList
             data={this.props.data.icons}
             renderItem={this._renderIcon}
-            ItemEmptyComponent={_ => <View style={styles.option} />}
+            ItemEmptyComponent={() => <View style={styles.option} />}
           />
         )
       case 2:
@@ -201,7 +201,7 @@ class CategoryDialog extends Component {
                 placeholder='e.g. "Date Night Spots"'
                 value={this.props.name}
                 onChangeText={text => this.props.setName(text)}
-                onSubmitEditing={_ => this.submit()}
+                onSubmitEditing={() => this.submit()}
                 returnKeyType='done'
                 style={styles.input}
                 placeholderTextColor={this.state.textColor}
@@ -282,24 +282,24 @@ const enhance = compose(
       name: ''
     }),
     {
-      next: ({ step }) => _ => ({ step: step + 1 }),
-      previous: ({ step }) => _ => ({ step: step - 1 }),
-      resetProgress: _ => _ => ({
+      next: ({ step }) => () => ({ step: step + 1 }),
+      previous: ({ step }) => () => ({ step: step - 1 }),
+      resetProgress: () => () => ({
         step: 0,
         color: null,
         icon: null,
         name: ''
       }),
-      setColor: _ => (color) => ({ color }),
-      setIcon: _ => (icon) => ({ icon }),
-      setName: _ => (name) => ({ name })
+      setColor: () => (color) => ({ color }),
+      setIcon: () => (icon) => ({ icon }),
+      setName: () => (name) => ({ name })
     }
   ),
   graphql(GetIconsAndColors),
   graphql(CreateCategory, { name: 'createCategory' }),
   graphql(UpdateCategory, { name: 'updateCategory' }),
   withProps((props) => ({
-    submit: async _ => {
+    submit: async () => {
       if (!props.color || !props.icon || !props.name) {
         return Promise.reject('Missing color, icon or name')
       }

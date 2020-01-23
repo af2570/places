@@ -51,7 +51,7 @@ class MapSearch extends Component {
     this.refs.modal.close()
     this.setState({ 
       searchText: '' 
-    }, _ => this.props.setKeyword(''))
+    }, () => this.props.setKeyword(''))
     
   }
 
@@ -126,7 +126,7 @@ class MapSearch extends Component {
             longitude: place.location.lng
           }}
           flat={true}
-          onPress={_ => this.onPressSearchMarker(place)}
+          onPress={() => this.onPressSearchMarker(place)}
         >
           <View style={styles.searchMarker} />
         </Marker>
@@ -138,7 +138,7 @@ class MapSearch extends Component {
     // TODO: make this a swipeable component
 
     return (
-      <TouchableOpacity style={styles.row} onPress={_ => this.onPressSearchResult(item)}>
+      <TouchableOpacity style={styles.row} onPress={() => this.onPressSearchResult(item)}>
         <View style={styles.rowContent}>
           <Text style={styles.rowTitle}>
             {index + 1}. {item.name}
@@ -183,10 +183,10 @@ class MapSearch extends Component {
         data={this.props.data.places}
         keyExtractor={item => item.id}
         renderItem={this._renderSearchResult}
-        ItemSeparatorComponent={_ => (
+        ItemSeparatorComponent={() => (
           <View style={styles.divider} />
         )}
-        ListEmptyComponent={_ => (
+        ListEmptyComponent={() => (
           <View style={styles.emptyList}>
             <Text>No results</Text>
           </View>
@@ -238,7 +238,7 @@ class MapSearch extends Component {
           showsUserLocation={true}
           onPress={this.onPressLocation}
           onPoiClick={this.onPressLocation}
-          // onRegionChange={_ => this.refs.search.blur()}
+          // onRegionChange={() => this.refs.search.blur()}
           onRegionChangeComplete={this.onRegionChange}
         >
           {this._renderSearchMarkers()}

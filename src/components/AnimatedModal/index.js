@@ -33,7 +33,7 @@ class AnimatedModal extends Component {
 
   close = () => {
     this.props.onClose()
-    this.animateModal(0, _ => {
+    this.animateModal(0, () => {
       this.setState({ isModalOpen: false })
     })
   }
@@ -41,7 +41,7 @@ class AnimatedModal extends Component {
   open = () => {
     this.setState({ 
       isModalOpen: true 
-    }, _ => {
+    }, () => {
       this.props.onOpen()
       this.animateModal(this.props.height)
     })
@@ -95,8 +95,8 @@ AnimatedModal.propTypes = {
 
 AnimatedModal.defaultProps = {
   height: deviceHeight / 2,
-  onClose: _ => {},
-  onOpen: _ => {}
+  onClose: () => {},
+  onOpen: () => {}
 }
 
 export default AnimatedModal

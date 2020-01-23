@@ -31,7 +31,7 @@ class AnimatedDialog extends Component {
   }
 
   close = () => {
-    this.animateModal(0, _ => {
+    this.animateModal(0, () => {
       this.setState({ isModalOpen: false })
     })
   }
@@ -40,7 +40,7 @@ class AnimatedDialog extends Component {
     const height = Dimensions.get('window').height
     this.setState(
       { isModalOpen: true },
-      _ => this.animateModal(height)
+      () => this.animateModal(height)
     )
   }
 
@@ -64,7 +64,7 @@ class AnimatedDialog extends Component {
             {title}
           </Text>
         }
-        <TouchableOpacity style={styles.headerIcon} onPress={_ => this.close()}>
+        <TouchableOpacity style={styles.headerIcon} onPress={() => this.close()}>
           <Icon name='close' color={color} />
         </TouchableOpacity>
       </View>
@@ -91,7 +91,7 @@ class AnimatedDialog extends Component {
                 horizontal: 'never'
               }}
             >
-              <TouchableOpacity style={styles.overlay} onPress={_ => this.close()} />
+              <TouchableOpacity style={styles.overlay} onPress={() => this.close()} />
               <View
                 style={[
                   styles.dialog,
